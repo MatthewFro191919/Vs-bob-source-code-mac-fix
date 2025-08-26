@@ -35,7 +35,7 @@ class OptionsMenu extends MusicBeatState
 			#end
 			new ScrollSpeedOption("Change your scroll speed (Left for -0.1, right for +0.1. If its at 1, it will be chart dependent)"),
 			new OffsetMenu("Get a note offset based off of your inputs!"),
-			new CustomizeGameplay("Drag'n'Drop Gameplay Modules around to your preference")
+			new CustomizeGameplay("Drag'n'Drop Gameplay Modules around to your preference"),
 			new BotPlay("Showcase your charts and mods with autoplay.")
 		]),
 		new OptionCatagory("Appearence", [
