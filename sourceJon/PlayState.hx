@@ -116,6 +116,7 @@ class PlayState extends MusicBeatState {
 
 	private var strumLineNotes:FlxTypedGroup<FlxSprite>;
 	private var playerStrums:FlxTypedGroup<FlxSprite>;
+	public static var cpuStrums:FlxTypedGroup<FlxSprite> = null;
 
 	private var camZooming:Bool = false;
 	private var curSong:String = "";
@@ -185,6 +186,7 @@ class PlayState extends MusicBeatState {
 	var scoreTxt:FlxText;
 	var replayTxt:FlxText;
 
+	var cpuNoteTimer:Array<Int> = [0, 0, 0, 0];
 	public static var campaignScore:Int = 0;
 
 	var defaultCamZoom:Float = 1.05;
@@ -988,6 +990,7 @@ class PlayState extends MusicBeatState {
 		add(strumLineNotes);
 
 		playerStrums = new FlxTypedGroup<FlxSprite>();
+		cpuStrums = new FlxTypedGroup<FlxSprite>();
 
 		// startCountdown();
 
@@ -1866,12 +1869,25 @@ class PlayState extends MusicBeatState {
 
 			babyArrow.ID = i;
 
-			if (player == 1) {
-				playerStrums.add(babyArrow);
+			switch (player)
+			{
+				case 0:
+					cpuStrums.add(babyArrow);
+				case 1:
+					playerStrums.add(babyArrow);
 			}
+
 			babyArrow.animation.play('static');
 			babyArrow.x += 50;
-			babyArrow.x += ((FlxG.width / 2) * player);
+			if (player == 2)
+				babyArrow.x += ((FlxG.width / 2) * 0);
+			else
+				babyArrow.x += ((FlxG.width / 2) * player);
+			
+			cpuStrums.forEach(function(spr:FlxSprite)
+			{					
+				spr.centerOffsets(); //CPU arrows start out slightly off-center
+			});
 			babyArrow.health = babyArrow.angle;
 			strumLineNotes.add(babyArrow);
 		}
@@ -2231,6 +2247,18 @@ class PlayState extends MusicBeatState {
 			// Conductor.lastSongPos = FlxG.sound.music.time;
 		}
 
+		if (generatedMusic && startedCountdown) {
+			for (i in 0...cpuNoteTimer.length) {
+				if (cpuNoteTimer[i] > 0) {
+					cpuNoteTimer[i]--;
+				} else if (cpuNoteTimer[i] == 0) {
+					cpuStrums.members[i].animation.play('static', true);
+					cpuStrums.members[i].centerOffsets();
+					cpuNoteTimer[i]--;
+				}	
+			}
+			
+		}
 		if (generatedMusic && PlayState.SONG.notes[Std.int(curStep / 16)] != null) {
 			// Make sure Girlfriend cheers only for certain songs
 			if (allowedToHeadbang) {
@@ -2596,6 +2624,15 @@ class PlayState extends MusicBeatState {
 				}
 			});
 		}
+
+		cpuStrums.forEach(function(spr:FlxSprite)
+		{
+			if (spr.animation.finished)
+			{
+				spr.animation.play('static');
+				spr.centerOffsets();
+			}
+		});
 
 		if (!inCutscene)
 			keyShit();
@@ -3102,6 +3139,18 @@ class PlayState extends MusicBeatState {
 			if (!holdArray[spr.ID])
 				spr.animation.play('static');
 
+			if (spr.animation.curAnim.name == 'confirm' && !curStage.startsWith('school')) {
+				spr.centerOffsets();
+				spr.offset.x -= 13;
+				spr.offset.y -= 13;
+			} else
+				spr.centerOffsets();
+		});
+		cpuStrums.forEach(function(spr:FlxSprite) 
+			if (pressArray[spr.ID] && spr.animation.curAnim.name != 'confirm')
+				spr.animation.play('pressed');
+			if (!holdArray[spr.ID])
+				spr.animation.play('static');
 			if (spr.animation.curAnim.name == 'confirm' && !curStage.startsWith('school')) {
 				spr.centerOffsets();
 				spr.offset.x -= 13;
