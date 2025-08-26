@@ -2480,13 +2480,9 @@ class PlayState extends MusicBeatState {
 
 				if (FlxG.save.data.downscroll) {
 					if (daNote.mustPress)
-						daNote.y = (playerStrums.members[Math.floor(Math.abs(daNote.noteData))].y
-							+ 0.45 * (Conductor.songPosition - daNote.strumTime) * FlxMath.roundDecimal(FlxG.save.data.scrollSpeed == 1 ? SONG.speed
-								+ songSpeedMultiplier : FlxG.save.data.scrollSpeed, 2));
+						daNote.y = (playerStrums.members[Math.floor(Math.abs(daNote.noteData))].y);
 					else
-						daNote.y = (strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].y
-							+ 0.45 * (Conductor.songPosition - daNote.strumTime) * FlxMath.roundDecimal(FlxG.save.data.scrollSpeed == 1 ? SONG.speed
-								+ songSpeedMultiplier : FlxG.save.data.scrollSpeed, 2));
+						daNote.y = (strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].y);
 					if (daNote.isSustainNote) {
 						// Remember = minus makes notes go up, plus makes them go down
 						if (daNote.animation.curAnim.name.endsWith('end') && daNote.prevNote != null)
@@ -2520,12 +2516,10 @@ class PlayState extends MusicBeatState {
 				} else {
 					if (daNote.mustPress)
 						daNote.y = (playerStrums.members[Math.floor(Math.abs(daNote.noteData))].y
-							- 0.45 * (Conductor.songPosition - daNote.strumTime) * FlxMath.roundDecimal(FlxG.save.data.scrollSpeed == 1 ? SONG.speed
-								+ songSpeedMultiplier : FlxG.save.data.scrollSpeed, 2));
+							- 0.45 * (Conductor.songPosition - daNote.strumTime));
 					else
 						daNote.y = (strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].y
-							- 0.45 * (Conductor.songPosition - daNote.strumTime) * FlxMath.roundDecimal(FlxG.save.data.scrollSpeed == 1 ? SONG.speed
-								+ songSpeedMultiplier : FlxG.save.data.scrollSpeed, 2));
+							- 0.45 * (Conductor.songPosition - daNote.strumTime));
 					if (daNote.isSustainNote) {
 						daNote.y -= daNote.height / 2;
 
@@ -3116,10 +3110,6 @@ class PlayState extends MusicBeatState {
 				if (FlxG.save.data.botplay && daNote.canBeHit && daNote.mustPress || FlxG.save.data.botplay && daNote.tooLate && daNote.mustPress) {
 					if (loadRep) {
 						// trace('ReplayNote ' + tmpRepNote.strumtime + ' | ' + tmpRepNote.direction);
-						if (rep.replay.songNotes.contains(HelperFunctions.truncateFloat(daNote.strumTime, 2))) {
-							goodNoteHit(daNote);
-							boyfriend.holdTimer = daNote.sustainLength;
-						}
 					} else {
 						goodNoteHit(daNote);
 						boyfriend.holdTimer = daNote.sustainLength;
