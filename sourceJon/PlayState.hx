@@ -3146,7 +3146,7 @@ class PlayState extends MusicBeatState {
 			} else
 				spr.centerOffsets();
 		});
-		cpuStrums.forEach(function(spr:FlxSprite) 
+		cpuStrums.forEach(function(spr:FlxSprite) {
 			if (pressArray[spr.ID] && spr.animation.curAnim.name != 'confirm')
 				spr.animation.play('pressed');
 			if (!holdArray[spr.ID])
